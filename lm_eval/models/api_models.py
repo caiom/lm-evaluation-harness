@@ -82,7 +82,7 @@ class TemplateAPI(TemplateLM):
         verify_certificate: bool = True,
         eos_string: str = None,
         # timeout in seconds
-        timeout: int = 300,
+        timeout: int = 999999,
         **kwargs,
     ) -> None:
         super().__init__()
@@ -370,6 +370,7 @@ class TemplateAPI(TemplateLM):
                     eos=self.eos_string,
                     **kwargs,
                 ),
+                timeout=9999999,
                 headers=self.header,
                 verify=self.verify_certificate,
             )
@@ -411,6 +412,7 @@ class TemplateAPI(TemplateLM):
                 self.base_url,
                 json=payload,
                 headers=self.header,
+                timeout=9999999,
             ) as response:
                 if not response.ok:
                     error_text = await response.text()
@@ -503,7 +505,7 @@ class TemplateAPI(TemplateLM):
                 )
             ]
 
-            return await tqdm_asyncio.gather(*tasks, desc="Requesting API")
+            return await tqdm_asyncio.gather(*tasks, desc="Requesting API", timeout=999999)
 
     def _loglikelihood_tokens(self, requests, **kwargs) -> List[Tuple[float, bool]]:
         assert (
